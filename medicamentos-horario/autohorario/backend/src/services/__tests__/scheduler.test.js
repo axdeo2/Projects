@@ -27,7 +27,7 @@ describe('suggestSchedule', () => {
 
   test('avoids conflict for any medication when hour 10 is taken', () => {
     const meds = [
-      { id: '1', condition: 'any', frequencyHours: 24, suggestedStartHour: 10, active: true },
+      { id: '1', condition: 'any', frequencyHours: 24, active: true },
       { id: '2', condition: 'any', frequencyHours: 24, active: true },
     ];
     const result = suggestSchedule(meds);

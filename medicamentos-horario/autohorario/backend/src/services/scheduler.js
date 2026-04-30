@@ -9,7 +9,7 @@ const ANY_PREFERENCE = [10, 8, 11, 12, 14, 16, 18, 20];
 function getDoseHours(startHour, frequencyHours) {
   const hours = [];
   for (let h = startHour; h < 24; h += frequencyHours) {
-    hours.push(h % 24);
+    hours.push(h);
   }
   return hours;
 }
