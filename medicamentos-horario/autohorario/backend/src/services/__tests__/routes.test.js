@@ -87,4 +87,27 @@ describe('Medications API (authenticated)', () => {
     const list = await request(app).get('/api/medications').set('Authorization', `Bearer ${token}`);
     expect(list.body).toHaveLength(0);
   });
+
+  test('DELETE /api/medications/:id returns 204', async () => {
+    const create = await request(app)
+      .post('/api/medications')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ name: 'X', dose: '10mg', frequencyHours: 8, condition: 'any', totalPills: 5, startDate: '2026-04-29' });
+    const id = create.body.id;
+    const res = await request(app).delete(`/api/medications/${id}`).set('Authorization', `Bearer ${token}`);
+    expect(res.status).toBe(204);
+  });
+
+  test('POST /api/medications/:id/take returns 400 when no pills remaining', async () => {
+    const create = await request(app)
+      .post('/api/medications')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ name: 'X', dose: '10mg', frequencyHours: 8, condition: 'any', totalPills: 1, startDate: '2026-04-29' });
+    const id = create.body.id;
+    // Take the only pill
+    await request(app).post(`/api/medications/${id}/take`).set('Authorization', `Bearer ${token}`);
+    // Now take again — should 400
+    const res = await request(app).post(`/api/medications/${id}/take`).set('Authorization', `Bearer ${token}`);
+    expect(res.status).toBe(400);
+  });
 });

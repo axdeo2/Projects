@@ -22,6 +22,11 @@ router.post('/', (req, res) => {
   res.status(201).json(med);
 });
 
+router.get('/suggest', (req, res) => {
+  const meds = getMedications(req.user.userId).filter((m) => m.active);
+  res.json(suggestSchedule(meds));
+});
+
 router.put('/:id', (req, res) => {
   try {
     const updated = updateMedication(req.user.userId, req.params.id, req.body);
@@ -48,11 +53,6 @@ router.post('/:id/take', (req, res) => {
     const status = e.message === 'No pills remaining' ? 400 : 404;
     res.status(status).json({ error: e.message });
   }
-});
-
-router.get('/suggest', (req, res) => {
-  const meds = getMedications(req.user.userId).filter((m) => m.active);
-  res.json(suggestSchedule(meds));
 });
 
 module.exports = router;
