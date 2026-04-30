@@ -1,4 +1,5 @@
 import { forwardRef } from 'react';
+import { getDosesOnDate } from '../utils';
 
 const HOURS = Array.from({ length: 16 }, (_, i) => i + 7); // 07:00 to 22:00
 const COLORS = ['bg-blue-200 text-blue-900', 'bg-green-200 text-green-900', 'bg-purple-200 text-purple-900', 'bg-rose-200 text-rose-900', 'bg-amber-200 text-amber-900', 'bg-teal-200 text-teal-900'];
@@ -15,14 +16,8 @@ function getWeekDays() {
   });
 }
 
-function getMedDoses(med, date) {
-  const start = new Date(med.startDate + 'T00:00:00');
-  if (date < start) return [];
-  const doses = [];
-  for (let h = med.suggestedStartHour; h < 24; h += med.frequencyHours) {
-    doses.push(Math.floor(h) % 24);
-  }
-  return doses;
+function getMedDoseHours(med, date) {
+  return getDosesOnDate(med, date).map((d) => d.getHours());
 }
 
 const DAY_LABELS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
@@ -50,7 +45,7 @@ const ScheduleTable = forwardRef(function ScheduleTable({ medications }, ref) {
             <tr key={hour} className="hover:bg-gray-50">
               <td className="border border-gray-200 px-2 py-1 text-gray-400 font-mono">{String(hour).padStart(2, '0')}:00</td>
               {weekDays.map((date, di) => {
-                const medsThisSlot = activeMeds.filter((m) => getMedDoses(m, date).includes(hour));
+                const medsThisSlot = activeMeds.filter((m) => getMedDoseHours(m, date).includes(hour));
                 return (
                   <td key={di} className="border border-gray-200 px-1 py-1 align-top h-8">
                     {medsThisSlot.map((m) => (
