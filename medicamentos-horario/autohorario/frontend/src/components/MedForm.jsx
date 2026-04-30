@@ -32,8 +32,8 @@ export default function MedForm({ initial, onSave, onCancel }) {
     setLoading(true);
     try {
       await onSave({ ...form, frequencyHours: Number(form.frequencyHours), totalPills: Number(form.totalPills) });
-    } catch (e) {
-      setError(e.message);
+    } catch (err) {
+      setError(err.message);
       setLoading(false);
     }
   }

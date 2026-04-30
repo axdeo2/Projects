@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getMedications } from '../api';
 import DoseItem from '../components/DoseItem';
+import { getEndDate, daysLeft } from '../utils';
 
 function getTodayDoses(medications) {
   const today = new Date();
@@ -18,19 +19,6 @@ function getTodayDoses(medications) {
   return doses.sort((a, b) => a.sortKey - b.sortKey);
 }
 
-function getEndDate(med) {
-  if (med.pillsRemaining === 0) return null;
-  const dosesPerDay = 24 / med.frequencyHours;
-  const daysLeft = Math.ceil(med.pillsRemaining / dosesPerDay);
-  const end = new Date(med.startDate + 'T00:00:00');
-  end.setDate(end.getDate() + daysLeft);
-  return end.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' });
-}
-
-function daysLeft(med) {
-  if (med.pillsRemaining === 0) return 0;
-  return Math.ceil(med.pillsRemaining / (24 / med.frequencyHours));
-}
 
 export default function Dashboard() {
   const [medications, setMedications] = useState([]);

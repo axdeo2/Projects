@@ -1,3 +1,5 @@
+import { getEndDate } from '../utils';
+
 const CONDITION_LABELS = {
   fasting: 'En ayunas',
   before_meal: 'Antes de comer',
@@ -5,17 +7,8 @@ const CONDITION_LABELS = {
   any: 'Sin restricción',
 };
 
-function getEndDate(med) {
-  if (med.pillsRemaining === 0) return 'Agotado';
-  const dosesPerDay = 24 / med.frequencyHours;
-  const daysLeft = Math.ceil(med.pillsRemaining / dosesPerDay);
-  const end = new Date(med.startDate + 'T00:00:00');
-  end.setDate(end.getDate() + daysLeft);
-  return end.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' });
-}
-
 export default function MedCard({ med, onEdit, onDelete }) {
-  const endDate = getEndDate(med);
+  const endDate = getEndDate(med) || 'Agotado';
   const isLow = med.pillsRemaining <= 3 * (24 / med.frequencyHours);
 
   return (

@@ -37,7 +37,7 @@ export default function WeeklySchedule() {
         </div>
         <button
           onClick={handleDownload}
-          disabled={downloading || loading || medications.length === 0}
+          disabled={downloading || loading || medications.filter((m) => m.active).length === 0}
           className="bg-green-600 text-white rounded-xl px-4 py-2 text-sm font-medium hover:bg-green-700 disabled:opacity-50 transition-colors"
         >
           {downloading ? 'Generando...' : '⬇ Descargar imagen'}

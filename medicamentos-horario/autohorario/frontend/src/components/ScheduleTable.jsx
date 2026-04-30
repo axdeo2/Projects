@@ -53,8 +53,8 @@ const ScheduleTable = forwardRef(function ScheduleTable({ medications }, ref) {
                 const medsThisSlot = activeMeds.filter((m) => getMedDoses(m, date).includes(hour));
                 return (
                   <td key={di} className="border border-gray-200 px-1 py-1 align-top h-8">
-                    {medsThisSlot.map((m, mi) => (
-                      <span key={m.id} className={`inline-block rounded px-1 py-0.5 text-[10px] font-medium truncate max-w-full ${COLORS[mi % COLORS.length]}`}>
+                    {medsThisSlot.map((m) => (
+                      <span key={m.id} className={`inline-block rounded px-1 py-0.5 text-[10px] font-medium truncate max-w-full ${COLORS[activeMeds.indexOf(m) % COLORS.length]}`}>
                         {m.name}
                       </span>
                     ))}
