@@ -18,8 +18,11 @@ function getWeekDays(weekOffset = 0) {
   });
 }
 
-function getMedDoseHours(med, date) {
-  return getDosesOnDate(med, date).map((d) => d.getHours());
+function getMedDoseTimes(med, date) {
+  return getDosesOnDate(med, date).map((d) => ({
+    hour: d.getHours(),
+    label: `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`,
+  }));
 }
 
 function isSameDay(a, b) {
@@ -59,12 +62,16 @@ const ScheduleTable = forwardRef(function ScheduleTable({ medications, weekOffse
               <td className="border border-gray-200 px-2 py-1 text-gray-400 font-mono">{String(hour).padStart(2, '0')}:00</td>
               {weekDays.map((date, di) => {
                 const isToday = isSameDay(date, today);
-                const medsThisSlot = activeMeds.filter((m) => getMedDoseHours(m, date).includes(hour));
+                const dosesThisSlot = activeMeds.flatMap((m) =>
+                  getMedDoseTimes(m, date)
+                    .filter((t) => t.hour === hour)
+                    .map((t) => ({ med: m, label: t.label }))
+                );
                 return (
                   <td key={di} className={`border border-gray-200 px-1 py-1 align-top h-8 ${isToday ? 'bg-blue-50/40' : ''}`}>
-                    {medsThisSlot.map((m) => (
-                      <span key={m.id} className={`inline-block rounded px-1 py-0.5 text-[10px] font-medium truncate max-w-full ${COLORS[activeMeds.indexOf(m) % COLORS.length]}`}>
-                        {m.name}
+                    {dosesThisSlot.map(({ med: m, label }) => (
+                      <span key={m.id + label} className={`inline-block rounded px-1 py-0.5 text-[10px] font-medium truncate max-w-full ${COLORS[activeMeds.indexOf(m) % COLORS.length]}`}>
+                        {label} {m.name}
                       </span>
                     ))}
                   </td>

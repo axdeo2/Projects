@@ -1,7 +1,7 @@
 // Returns the Date object of every dose that falls on a given calendar date.
 export function getDosesOnDate(med, date) {
   const startDt = new Date(med.startDate + 'T00:00:00');
-  startDt.setHours(med.suggestedStartHour, 0, 0, 0);
+  startDt.setHours(med.suggestedStartHour, med.suggestedStartMinute || 0, 0, 0);
 
   const dayStart = new Date(date);
   dayStart.setHours(0, 0, 0, 0);
@@ -27,7 +27,7 @@ export function getDosesOnDate(med, date) {
 // Returns the next scheduled dose Date from now.
 export function getNextDose(med) {
   const startDt = new Date(med.startDate + 'T00:00:00');
-  startDt.setHours(med.suggestedStartHour, 0, 0, 0);
+  startDt.setHours(med.suggestedStartHour, med.suggestedStartMinute || 0, 0, 0);
 
   const now = new Date();
   if (now <= startDt) return startDt;
@@ -47,7 +47,7 @@ export function formatNextDose(med) {
   const tomorrowStart = new Date(todayStart); tomorrowStart.setDate(todayStart.getDate() + 1);
   const dayAfterStart = new Date(tomorrowStart); dayAfterStart.setDate(tomorrowStart.getDate() + 1);
 
-  const timeStr = `${String(next.getHours()).padStart(2, '0')}:00`;
+  const timeStr = `${String(next.getHours()).padStart(2, '0')}:${String(next.getMinutes()).padStart(2, '0')}`;
 
   if (next < tomorrowStart) return `hoy a las ${timeStr}`;
   if (next < dayAfterStart) return `mañana a las ${timeStr}`;

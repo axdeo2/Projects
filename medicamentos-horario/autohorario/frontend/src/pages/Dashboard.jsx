@@ -9,8 +9,10 @@ function getTodayDoses(medications) {
   for (const med of medications) {
     if (!med.active) continue;
     for (const doseTime of getDosesOnDate(med, today)) {
-      const hour = doseTime.getHours();
-      doses.push({ med, time: `${String(hour).padStart(2, '0')}:00`, sortKey: hour });
+      const h = doseTime.getHours();
+      const m = doseTime.getMinutes();
+      const time = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+      doses.push({ med, time, sortKey: h * 60 + m });
     }
   }
   return doses.sort((a, b) => a.sortKey - b.sortKey);

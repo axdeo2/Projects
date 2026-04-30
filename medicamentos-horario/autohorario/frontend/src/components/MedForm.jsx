@@ -32,7 +32,9 @@ export default function MedForm({ initial, onSave, onCancel }) {
     condition: initial?.condition || 'any',
     totalPills: initial?.totalPills || '',
     startDate: initial?.startDate || today,
-    startHour: initial?.suggestedStartHour ?? '',
+    startTime: initial?.suggestedStartHour != null
+      ? `${String(initial.suggestedStartHour).padStart(2, '0')}:${String(initial.suggestedStartMinute || 0).padStart(2, '0')}`
+      : '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -47,8 +49,12 @@ export default function MedForm({ initial, onSave, onCancel }) {
     setLoading(true);
     try {
       const payload = { ...form, frequencyHours: Number(form.frequencyHours), totalPills: Number(form.totalPills) };
-      if (form.startHour !== '') payload.startHour = Number(form.startHour);
-      else delete payload.startHour;
+      if (form.startTime) {
+        const [h, m] = form.startTime.split(':').map(Number);
+        payload.startHour = h;
+        payload.startMinute = m;
+      }
+      delete payload.startTime;
       await onSave(payload);
     } catch (err) {
       setError(err.message);
@@ -121,13 +127,10 @@ export default function MedForm({ initial, onSave, onCancel }) {
               Hora de inicio <span className="text-gray-400 font-normal">(opcional — si no pones, se sugiere automáticamente)</span>
             </label>
             <input
-              type="number"
-              min="0"
-              max="23"
-              value={form.startHour}
-              onChange={set('startHour')}
+              type="time"
+              value={form.startTime}
+              onChange={set('startTime')}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Ej: 8 (para 08:00)"
             />
           </div>
           {error && <p className="text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
