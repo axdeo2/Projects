@@ -28,7 +28,7 @@ export default function MedCard({ med, onEdit, onDelete }) {
         <span>Hora sugerida: <strong>{String(med.suggestedStartHour).padStart(2, '0')}:00</strong></span>
       </div>
       <div className={`flex items-center justify-between text-xs mt-2 pt-2 border-t border-gray-100 ${isLow ? 'text-amber-600' : 'text-gray-500'}`}>
-        <span>{isLow ? '⚠️' : '💊'} {med.pillsRemaining} pastillas restantes</span>
+        <span>{isLow ? '⚠️' : '💊'} {med.pillsRemaining} {med.unit || 'pastilla'}(s) restantes</span>
         <span>Hasta {endDate}</span>
       </div>
     </div>

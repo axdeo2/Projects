@@ -43,9 +43,9 @@ export default function DoseItem({ med, time, onTaken }) {
           disabled={!canTake || loading}
           className="text-xs bg-blue-600 text-white rounded-lg px-3 py-1.5 font-medium hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
-          {loading ? '...' : canTake ? 'Tomé esta dosis' : 'Sin pastillas'}
+          {loading ? '...' : canTake ? 'Tomé esta dosis' : `Sin ${med.unit || 'pastilla'}s`}
         </button>
-        <p className="text-xs text-gray-400">{med.pillsRemaining} restantes</p>
+        <p className="text-xs text-gray-400">{med.pillsRemaining} {med.unit || 'pastilla'}(s) restantes</p>
         {error && <p className="text-xs text-red-500">{error}</p>}
       </div>
     </div>

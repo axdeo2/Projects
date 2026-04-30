@@ -9,11 +9,25 @@ const CONDITIONS = [
 
 const FREQUENCY_SUGGESTIONS = [4, 6, 8, 12, 24, 48, 72];
 
+const UNITS = [
+  { value: 'pastilla', label: 'Pastilla(s)' },
+  { value: 'cápsula', label: 'Cápsula(s)' },
+  { value: 'comprimido', label: 'Comprimido(s)' },
+  { value: 'ml', label: 'ml' },
+  { value: 'cucharada', label: 'Cucharada(s)' },
+  { value: 'cucharadita', label: 'Cucharadita(s)' },
+  { value: 'sobre', label: 'Sobre(s)' },
+  { value: 'gota', label: 'Gota(s)' },
+  { value: 'ampolleta', label: 'Ampolleta(s)' },
+  { value: 'parche', label: 'Parche(s)' },
+];
+
 export default function MedForm({ initial, onSave, onCancel }) {
   const today = new Date().toISOString().split('T')[0];
   const [form, setForm] = useState({
     name: initial?.name || '',
     dose: initial?.dose || '',
+    unit: initial?.unit || 'pastilla',
     frequencyHours: initial?.frequencyHours || 8,
     condition: initial?.condition || 'any',
     totalPills: initial?.totalPills || '',
@@ -51,9 +65,17 @@ export default function MedForm({ initial, onSave, onCancel }) {
             <label className="block text-xs font-medium text-gray-600 mb-1">Nombre</label>
             <input required value={form.name} onChange={set('name')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: Amoxicilina" />
           </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Dosis</label>
-            <input required value={form.dose} onChange={set('dose')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: 500mg" />
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-gray-600 mb-1">Dosis</label>
+              <input required value={form.dose} onChange={set('dose')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: 500mg, 5ml" />
+            </div>
+            <div className="w-36">
+              <label className="block text-xs font-medium text-gray-600 mb-1">Tipo</label>
+              <select value={form.unit} onChange={set('unit')} className="w-full border border-gray-300 rounded-lg px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                {UNITS.map((u) => <option key={u.value} value={u.value}>{u.label}</option>)}
+              </select>
+            </div>
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">Cada cuántas horas</label>
@@ -87,7 +109,7 @@ export default function MedForm({ initial, onSave, onCancel }) {
             </select>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Total de pastillas/dosis</label>
+            <label className="block text-xs font-medium text-gray-600 mb-1">Total de {form.unit}s</label>
             <input required type="number" min="1" value={form.totalPills} onChange={set('totalPills')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: 21" />
           </div>
           <div>

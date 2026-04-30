@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { name, dose, frequencyHours, condition, totalPills, startDate, startHour } = req.body;
+  const { name, dose, unit = 'pastilla', frequencyHours, condition, totalPills, startDate, startHour } = req.body;
   let suggestedStartHour;
   if (startHour !== undefined && startHour !== null && startHour !== '') {
     suggestedStartHour = Number(startHour);
@@ -20,7 +20,7 @@ router.post('/', (req, res) => {
     suggestedStartHour = suggested.at(-1)?.suggestedStartHour ?? 9;
   }
   const med = addMedication(req.user.userId, {
-    name, dose, frequencyHours, condition,
+    name, dose, unit, frequencyHours, condition,
     totalPills, pillsRemaining: totalPills,
     startDate, suggestedStartHour, active: true,
   });
