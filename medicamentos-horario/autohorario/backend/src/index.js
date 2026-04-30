@@ -4,6 +4,8 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 
+app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
+
 app.use('/api/login', require('./routes/auth'));
 app.use('/api/medications', require('./routes/medications'));
 
