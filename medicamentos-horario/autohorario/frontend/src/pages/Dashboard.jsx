@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getMedications } from '../api';
 import DoseItem from '../components/DoseItem';
-import { getDosesOnDate, getEndDate, daysLeft, formatNextDose, isNextDoseToday } from '../utils';
+import { getDosesOnDate, getEndDate, daysLeft, formatNextDose, isNextDoseToday, isDoseTaken } from '../utils';
 
 function getTodayDoses(medications) {
   const today = new Date();
@@ -12,7 +12,7 @@ function getTodayDoses(medications) {
       const h = doseTime.getHours();
       const m = doseTime.getMinutes();
       const time = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-      doses.push({ med, time, sortKey: h * 60 + m });
+      doses.push({ med, time, doseTime, sortKey: h * 60 + m });
     }
   }
   return doses.sort((a, b) => a.sortKey - b.sortKey);
@@ -72,8 +72,8 @@ export default function Dashboard() {
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {doses.map(({ med, time }, i) => (
-            <DoseItem key={`${med.id}-${time}-${i}`} med={med} time={time} onTaken={load} />
+          {doses.map(({ med, time, doseTime }, i) => (
+            <DoseItem key={`${med.id}-${time}-${i}`} med={med} time={time} doseTime={doseTime} taken={isDoseTaken(med, doseTime)} onTaken={load} />
           ))}
         </div>
       )}

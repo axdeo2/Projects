@@ -63,6 +63,15 @@ export function isNextDoseToday(med) {
   return next < tomorrowStart;
 }
 
+// Returns true if the dose scheduled at doseDateTime has already been taken.
+// A dose is considered taken if lastTakenAt falls within [doseDateTime, doseDateTime + frequencyHours).
+export function isDoseTaken(med, doseDateTime) {
+  if (!med.lastTakenAt) return false;
+  const taken = new Date(med.lastTakenAt);
+  const windowEnd = new Date(doseDateTime.getTime() + med.frequencyHours * 60 * 60 * 1000);
+  return taken >= doseDateTime && taken < windowEnd;
+}
+
 export function getEndDate(med) {
   if (med.pillsRemaining === 0) return null;
   const dosesPerDay = 24 / med.frequencyHours;

@@ -59,7 +59,7 @@ function takeDose(userId, id) {
   const med = meds.find((m) => m.id === id);
   if (!med) throw new Error(`Medication ${id} not found`);
   if (med.pillsRemaining <= 0) throw new Error('No pills remaining');
-  return updateMedication(userId, id, { pillsRemaining: med.pillsRemaining - 1 });
+  return updateMedication(userId, id, { pillsRemaining: med.pillsRemaining - 1, lastTakenAt: new Date().toISOString() });
 }
 
 module.exports = { getUsers, getMedications, addMedication, updateMedication, deleteMedication, takeDose };

@@ -8,11 +8,11 @@ const CONDITION_LABELS = {
   any: { label: 'Sin restricción', color: 'bg-gray-100 text-gray-600' },
 };
 
-export default function DoseItem({ med, time, onTaken }) {
+export default function DoseItem({ med, time, taken, onTaken }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const condition = CONDITION_LABELS[med.condition] || CONDITION_LABELS.any;
-  const canTake = med.pillsRemaining > 0;
+  const canTake = med.pillsRemaining > 0 && !taken;
 
   async function handleTake() {
     setError('');
@@ -38,13 +38,19 @@ export default function DoseItem({ med, time, onTaken }) {
         </div>
       </div>
       <div className="flex flex-col items-end gap-1 shrink-0">
-        <button
-          onClick={handleTake}
-          disabled={!canTake || loading}
-          className="text-xs bg-blue-600 text-white rounded-lg px-3 py-1.5 font-medium hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-        >
-          {loading ? '...' : canTake ? 'Tomé esta dosis' : `Sin ${med.unit || 'pastilla'}s`}
-        </button>
+        {taken ? (
+          <span className="text-xs bg-green-100 text-green-700 rounded-lg px-3 py-1.5 font-medium">
+            Tomada ✓
+          </span>
+        ) : (
+          <button
+            onClick={handleTake}
+            disabled={!canTake || loading}
+            className="text-xs bg-blue-600 text-white rounded-lg px-3 py-1.5 font-medium hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          >
+            {loading ? '...' : med.pillsRemaining > 0 ? 'Tomé esta dosis' : `Sin ${med.unit || 'pastilla'}s`}
+          </button>
+        )}
         <p className="text-xs text-gray-400">{med.pillsRemaining} {med.unit || 'pastilla'}(s) restantes</p>
         {error && <p className="text-xs text-red-500">{error}</p>}
       </div>
