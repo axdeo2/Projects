@@ -10,10 +10,15 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { name, dose, frequencyHours, condition, totalPills, startDate } = req.body;
-  const meds = getMedications(req.user.userId);
-  const suggested = suggestSchedule([...meds, { condition, frequencyHours, active: true }]);
-  const suggestedStartHour = suggested.at(-1)?.suggestedStartHour ?? 9;
+  const { name, dose, frequencyHours, condition, totalPills, startDate, startHour } = req.body;
+  let suggestedStartHour;
+  if (startHour !== undefined && startHour !== null && startHour !== '') {
+    suggestedStartHour = Number(startHour);
+  } else {
+    const meds = getMedications(req.user.userId);
+    const suggested = suggestSchedule([...meds, { condition, frequencyHours, active: true }]);
+    suggestedStartHour = suggested.at(-1)?.suggestedStartHour ?? 9;
+  }
   const med = addMedication(req.user.userId, {
     name, dose, frequencyHours, condition,
     totalPills, pillsRemaining: totalPills,
