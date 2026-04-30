@@ -7,7 +7,7 @@ const CONDITIONS = [
   { value: 'any', label: 'Sin restricción' },
 ];
 
-const FREQUENCIES = [4, 6, 8, 12, 24];
+const FREQUENCY_SUGGESTIONS = [4, 6, 8, 12, 24, 48, 72];
 
 export default function MedForm({ initial, onSave, onCancel }) {
   const today = new Date().toISOString().split('T')[0];
@@ -53,9 +53,28 @@ export default function MedForm({ initial, onSave, onCancel }) {
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">Cada cuántas horas</label>
-            <select value={form.frequencyHours} onChange={set('frequencyHours')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-              {FREQUENCIES.map((f) => <option key={f} value={f}>Cada {f} horas</option>)}
-            </select>
+            <input
+              required
+              type="number"
+              min="1"
+              max="168"
+              value={form.frequencyHours}
+              onChange={set('frequencyHours')}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Ej: 8"
+            />
+            <div className="flex flex-wrap gap-1 mt-1">
+              {FREQUENCY_SUGGESTIONS.map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  onClick={() => setForm((prev) => ({ ...prev, frequencyHours: f }))}
+                  className={`text-xs px-2 py-0.5 rounded-full border transition-colors ${Number(form.frequencyHours) === f ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-300 text-gray-500 hover:bg-gray-50'}`}
+                >
+                  {f}h
+                </button>
+              ))}
+            </div>
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">Condición de toma</label>
